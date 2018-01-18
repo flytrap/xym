@@ -31,7 +31,6 @@ class ParserPdf(object):
         """初始化pdf解析对象"""
         rsrc_mgr = PDFResourceManager()
         la_params = LAParams()
-        # I changed the following 2 parameters to get rid of white spaces inside words:
         la_params.char_margin = 1.0
         la_params.word_margin = 1.0
         device = PDFPageAggregator(rsrc_mgr, laparams=la_params)

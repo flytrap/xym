@@ -81,6 +81,7 @@ class ImportData:
             update_date['desc'] = '{}之{}'.format(
                 master_name, name.replace('）', '').replace(')', '').split('（')[-1].split('(')[-1])
         get_data['name'] = new_name if new_name else name
+        get_data['name'] = get_data['name'].replace(' ', '').strip()
 
         if num:
             grade = cls.get_create_grade(num)

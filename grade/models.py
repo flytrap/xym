@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from .managers import PeopleManager
 
 # Create your models here.
 
@@ -29,6 +30,8 @@ class People(models.Model):
     desc = models.TextField('介绍', null=True, blank=True)
 
     childes = models.ManyToManyField('self', symmetrical=False, verbose_name='弟子')
+
+    objects = PeopleManager()
 
     class Meta:
         verbose_name = '传人'

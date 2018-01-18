@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Created by flytrap
-from base.serializer import BaseModelSerializer, serializers
+from flytrap.base.serializer import BaseModelSerializer, serializers
 from .models import People, Grade
 
 
@@ -25,15 +25,9 @@ class SimplePeopleSerializer(BaseModelSerializer):
         return obj.childes.exists()
 
 
-class PeopleSerializer(BaseModelSerializer):
-    grade = GradeSerializer(many=False)
-    has_child = serializers.SerializerMethodField(method_name='_har_child', read_only=True)
+class PeopleSerializer(SimplePeopleSerializer):
     childes = SimplePeopleSerializer(many=True)
 
     class Meta:
         model = People
         exclude = ('user',)
-
-    @staticmethod
-    def _har_child(obj):
-        return obj.childes.exists()
