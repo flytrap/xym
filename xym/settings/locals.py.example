@@ -1,0 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Created by flytrap
+DEBUG = True
+SHOW_SIGNUP = True  # 显示注册接口

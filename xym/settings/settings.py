@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -24,7 +25,7 @@ SECRET_KEY = 'mwec!r(c=)o2%%y3$mv(s_ohl8m!kaovg3l8id0yu7081291vr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
 
     'corsheaders',  # 跨域
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_swagger',
 
     'grade'
 ]
@@ -79,7 +82,7 @@ WSGI_APPLICATION = 'xym.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, '../../db.sqlite3'),
     }
 }
 
@@ -104,9 +107,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'zh-hans'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -120,9 +122,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     # 'rest_framework.authentication.TokenAuthentication',
-    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'flytrap.auth.account.token.auth.TokenAuthentication',
+
+    ),
 
     # API接口默认访问权限配置, 默认需要登录
     'DEFAULT_PERMISSION_CLASSES': (
@@ -136,8 +141,17 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 15  # default page size
 }
 
+SWAGGER_SETTINGS = {
+    'DOC_EXPANSION': 'list',
+    'JSON_EDITOR': True,
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
+    'USE_SESSION_AUTH': True,
+}
 CORS_ORIGIN_WHITELIST = [
     '127.0.0.1:8000',
     'localhost:4200',
     '127.0.0.1:4200',
 ]
+
+SHOW_SIGNUP = False

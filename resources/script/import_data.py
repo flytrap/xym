@@ -7,9 +7,9 @@ import os
 from django.core.wsgi import get_wsgi_application
 import sys
 
-sys.path.insert(0, '../../xym')
+sys.path.insert(0, '../../')
 print(sys.path)
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'xym.settings')
 application = get_wsgi_application()
 
 from grade.models import People, Grade
@@ -18,9 +18,8 @@ from resources.script.cultural import ParserPdf
 
 class ImportData:
     @classmethod
-    def import_data(cls):
+    def import_data(cls, pdf_path):
         People.objects.all().delete()
-        pdf_path = '/Users/flytrap/code/github/xym/people/xym.pdf'
         parser = ParserPdf(pdf_path)
         parser.parser()
         print('parser ok')
@@ -95,4 +94,9 @@ class ImportData:
 
 
 if __name__ == '__main__':
-    ImportData.import_data()
+    file_path = sys.argv[-1]
+    if os.path.isfile(file_path):
+        # pdf_path = '/Users/flytrap/code/github/xym/people/xym.pdf'
+        ImportData.import_data(file_path)
+    else:
+        print('file not found')
