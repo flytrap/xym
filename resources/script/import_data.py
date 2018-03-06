@@ -32,11 +32,10 @@ class ImportData:
                             if p.name == parent.master_name:
                                 parent.childes.remove(p)
                         parent.save()
-                    parent = cls.get_create_people('', line, k - 1)
+                    parent = cls.get_create_people(line, k - 1)
                 elif isinstance(line, list):
                     for name in line:
-                        parent_name = parent.name if parent else ''
-                        child = cls.get_create_people(parent_name, name, k)
+                        child = cls.get_create_people(name, k, parent)
                         if isinstance(parent, People):
                             parent.childes.add(child)
 
@@ -48,8 +47,9 @@ class ImportData:
         return grade
 
     @classmethod
-    def get_create_people(cls, master_name, name, num=None):
+    def get_create_people(cls, name, num=None, parent=None):
         """门人有则获取，无则创建，标准是代和姓名"""
+        master_name = parent.name if parent else ''
         if name == '':
             return
         # 获取门人条件
@@ -89,6 +89,8 @@ class ImportData:
         for k, v in update_date.items():
             if v and not getattr(people, k):
                 setattr(people, k, v)
+        if parent and not people.parents.filter(id=parent.id).exists():
+            people.parents.add(parent)
         people.save()
         return people
 
@@ -96,7 +98,7 @@ class ImportData:
 if __name__ == '__main__':
     file_path = sys.argv[-1]
     if os.path.isfile(file_path):
-        # pdf_path = '/Users/flytrap/code/github/xym/people/xym.pdf'
+        file_path = '/Users/flytrap/code/github/xym/people/xym.pdf'
         ImportData.import_data(file_path)
     else:
         print('file not found')

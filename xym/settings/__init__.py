@@ -2,9 +2,4 @@
 # -*- coding: utf-8 -*-
 #
 # Created by flytrap
-from .settings import *
-
-try:
-    from .locals import *
-except:
-    pass
+from .log import *

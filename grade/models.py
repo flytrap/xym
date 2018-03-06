@@ -29,7 +29,8 @@ class People(models.Model):
     address = models.CharField('地址', max_length=256, default='')
     desc = models.TextField('介绍', null=True, blank=True)
 
-    childes = models.ManyToManyField('self', symmetrical=False, verbose_name='弟子')
+    childes = models.ManyToManyField('self', symmetrical=False, verbose_name='弟子', related_name='child')
+    parents = models.ManyToManyField('self', symmetrical=False, verbose_name='师父', related_name='parent')
 
     objects = PeopleManager()
 

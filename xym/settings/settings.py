@@ -14,7 +14,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static')
+BASE_DIR = os.path.join(BASE_DIR, '..')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -23,7 +24,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static')
 SECRET_KEY = 'mwec!r(c=)o2%%y3$mv(s_ohl8m!kaovg3l8id0yu7081291vr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -82,7 +83,7 @@ WSGI_APPLICATION = 'xym.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '../../db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'xym.db'),
     }
 }
 
@@ -124,18 +125,16 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         'flytrap.auth.account.token.auth.TokenAuthentication',
-
+        'rest_framework.authentication.SessionAuthentication',
     ),
 
-    # API接口默认访问权限配置, 默认需要登录
     'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_FILTER_BACKENDS': ('flytrap.base.backends.MysqlDjangoFilterBackend',),
 
-    # 默认分页设置
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'MAX_PAGE_SIZE': 50,
     'PAGE_SIZE': 15  # default page size
@@ -152,6 +151,32 @@ CORS_ORIGIN_WHITELIST = [
     '127.0.0.1:8000',
     'localhost:4200',
     '127.0.0.1:4200',
+    'xingyimen.org.cn',
 ]
 
+# 默认不显示注册接口
 SHOW_SIGNUP = False
+
+# 缓存
+# Redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379',
+        'OPTIONS': {
+            'DB': 0,
+            # 'PASSWORD': 'root',
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            'CONNECTION_POOL_KWARGS': {'max_connections': 1000}
+        },
+    },
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = 'default'
+
+LOG_ROOT = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOG_ROOT):
+    os.mkdir(LOG_ROOT)
+LOG_SQL_TO_FILE = False
+LOG_DB_LEVEL = 'INFO'

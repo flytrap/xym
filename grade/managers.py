@@ -2,56 +2,63 @@
 # -*- coding: utf-8 -*-
 #
 # Created by flytrap
+import copy
 from django.db.models.manager import Manager
 
 
 class PeopleManager(Manager):
     def query_people(self, name):
+        """
+        模糊匹配门人
+        :param name:
+        :return:
+        """
         peoples = self.filter(name__icontains=name).select_related('grade')
         results = []
-        # return [[people].extend(self.calc_parent_people(people)) for people in peoples]
         for people in peoples:
-            li = self.calc_parent_people(people)
-            # self.check_list(results, people, li)
-            if li and isinstance(li[-1], list):
-                results.append([people] + li[-1])
-                del li[-1]
-            if li and isinstance(li[-2], list):
-                results.append([people] + li[-2])
-                del li[-2]
-            results.append([people] + li)
+            li = []
+            self.get_parent(people, li)
+            results.extend(self.split_people(li, people))
         return results
 
-    def check_list(self, results, people, back_peoples: list):
-        # results.extend([people] + back_peoples)
-        for i, pp in enumerate(back_peoples[::-1]):
-            if not pp:
-                del back_peoples[back_peoples.index(pp)]
-                continue
-            if isinstance(pp, list):
-                results.append(pp)
-                del back_peoples[back_peoples.index(pp)]
+    def get_parent(self, people, childes: list):
+        """
+        获取父节点，递归至顶级
+        :param people:
+        :param childes:
+        :return:
+        """
+        parents = people.parents.all()
+        old_childes = None
+        for index, p in enumerate(parents):
+            if parents.count() > 1 and index == 0:
+                old_childes = copy.deepcopy(childes)
+            if index != 0 and old_childes:
+                tmp_childes = copy.deepcopy(old_childes)
+                childes.insert(0, tmp_childes)
+                childes = tmp_childes
+            childes.append(p)
+            self.get_parent(p, childes)
+
+    @staticmethod
+    def split_people(peoples: list, p):
+        """
+        拆分处理
+        :param peoples:
+        :param p:
+        :return:
+        """
+        results = []
+        li_index = []
+        for index, people in enumerate(peoples):
+            if isinstance(people, list):
+                people.insert(0, p)
+                results.append(people)
+                li_index.append(index)
                 continue
             break
-        return results
-
-    def calc_parent_people(self, people):
-        results = []
-        if not people.master_name:
-            return []
-        # peoples = people.people_set.all().select_related('grade')
-        peoples = self.filter(name=people.master_name).select_related('grade')
-        for index, p in enumerate(peoples):
-            back_peoples = self.calc_parent_people(p)
-            if len(peoples) > 1 and index != 0:
-                results.append([p] + back_peoples)
-            else:
-                results.extend([p] + back_peoples)
-                self.check_list(results, p, back_peoples)
-                # for i, pp in enumerate(back_peoples[::-1]):
-                #     if isinstance(pp, list):
-                #         results.append(back_peoples[len(back_peoples) - i - 1].insert(0, p))
-                #         del back_peoples[i]
-                #         continue
-                #     break
+        for i in li_index[::-1]:
+            del peoples[i]
+        results.append(peoples)
+        peoples.insert(0, p)
         return results
