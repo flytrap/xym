@@ -14,8 +14,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = os.path.join(BASE_DIR, '..')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+BASE_DIR = os.path.join(BASE_DIR, '../../../')
+STATIC_ROOT = os.path.join(BASE_DIR, 'xym/static')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'xym.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'xym.db'),
+        'NAME': os.path.join(BASE_DIR, 'xym/xym.db'),
     }
 }
 
@@ -175,7 +175,7 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = 'default'
 
-LOG_ROOT = os.path.join(BASE_DIR, 'logs')
+LOG_ROOT = os.path.join(BASE_DIR, 'xym/logs')
 if not os.path.exists(LOG_ROOT):
     os.mkdir(LOG_ROOT)
 LOG_SQL_TO_FILE = False

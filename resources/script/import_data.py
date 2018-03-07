@@ -3,11 +3,12 @@
 #
 # Created by flytrap
 import os
-
-from django.core.wsgi import get_wsgi_application
 import sys
 
+from django.core.wsgi import get_wsgi_application
+
 sys.path.insert(0, '../../')
+sys.path.insert(0, '../../src/')
 print(sys.path)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'xym.settings')
 application = get_wsgi_application()
