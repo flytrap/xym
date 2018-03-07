@@ -20,7 +20,7 @@ from rest_framework_swagger.views import get_swagger_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url('^api/', include('grade.urls'), ),
+    url('^api/people/', include('grade.urls'), ),
     url('^api/auth/', include('flytrap.auth.account.token.urls')),
 
     url('^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
