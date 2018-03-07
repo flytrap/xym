@@ -99,7 +99,7 @@ class ImportData:
 if __name__ == '__main__':
     file_path = sys.argv[-1]
     if os.path.isfile(file_path):
-        file_path = '/Users/flytrap/code/github/xym/people/xym.pdf'
+        # file_path = '/Users/flytrap/code/github/xym/people/xym.pdf'
         ImportData.import_data(file_path)
     else:
         print('file not found')
