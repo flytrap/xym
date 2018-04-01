@@ -16,13 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+from django.conf import settings
 from rest_framework_swagger.views import get_swagger_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('^api/people/', include('grade.urls'), ),
+    url('^api/users/', include('users.urls'), ),
     url('^api/auth/', include('flytrap.auth.account.token.urls')),
+    url('^api/comments/', include('flytrap.comments.urls')),
 
     url('^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url('^docs', get_swagger_view('形意门接口文档'), )
 ]
+
+if getattr(settings, 'SHOW_DOCS', False):
+    urlpatterns.append(url('^docs', get_swagger_view('形意门接口文档'), ))

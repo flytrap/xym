@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from .managers import PeopleManager
+from .managers import PeopleManager, GradeManager
 
 # Create your models here.
 
@@ -11,6 +11,8 @@ class Grade(models.Model):
     title = models.CharField('辈份', max_length=32, default='')
     code = models.IntegerField('辈份代码', unique=True)
     desc = models.TextField('描述', null=True, blank=True)
+
+    objects = GradeManager()
 
     class Meta:
         verbose_name = '辈份'

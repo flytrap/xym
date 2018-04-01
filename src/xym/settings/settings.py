@@ -9,13 +9,12 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = os.path.join(BASE_DIR, '../../../')
-STATIC_ROOT = os.path.join(BASE_DIR, 'xym/static')
+BASE_DIR = os.path.join(BASE_DIR, '../../')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -43,7 +42,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_swagger',
 
-    'grade'
+    'flytrap.comments',
+    'grade',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -83,8 +84,11 @@ WSGI_APPLICATION = 'xym.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'xym/xym.db'),
-    }
+        'NAME': os.path.join(BASE_DIR, 'xym.db'),
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR, 'xym_test.db'),
+        },
+    },
 }
 
 # Password validation
@@ -121,41 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.TokenAuthentication',
-        'flytrap.auth.account.token.auth.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
-
-    'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_FILTER_BACKENDS': ('flytrap.base.backends.MysqlDjangoFilterBackend',),
-
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'MAX_PAGE_SIZE': 50,
-    'PAGE_SIZE': 15  # default page size
-}
-
-SWAGGER_SETTINGS = {
-    'DOC_EXPANSION': 'list',
-    'JSON_EDITOR': True,
-    'LOGIN_URL': 'rest_framework:login',
-    'LOGOUT_URL': 'rest_framework:logout',
-    'USE_SESSION_AUTH': True,
-}
-CORS_ORIGIN_WHITELIST = [
-    '127.0.0.1:8000',
-    'localhost:4200',
-    '127.0.0.1:4200',
-    'xingyimen.org.cn',
-]
-
-# 默认不显示注册接口
-SHOW_SIGNUP = False
+MEDIA_URL = '/media/'
 
 # 缓存
 # Redis
@@ -164,7 +134,7 @@ CACHES = {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': '127.0.0.1:6379',
         'OPTIONS': {
-            'DB': 0,
+            'DB': 1,
             # 'PASSWORD': 'root',
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             'CONNECTION_POOL_KWARGS': {'max_connections': 1000}
@@ -175,8 +145,11 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = 'default'
 
-LOG_ROOT = os.path.join(BASE_DIR, 'xym/logs')
+LOG_ROOT = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOG_ROOT):
     os.mkdir(LOG_ROOT)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+if not os.path.exists(MEDIA_ROOT):
+    os.mkdir(MEDIA_ROOT)
 LOG_SQL_TO_FILE = False
 LOG_DB_LEVEL = 'INFO'

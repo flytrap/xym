@@ -6,7 +6,7 @@ from django.conf.urls import url
 from .views import GradeView
 
 urlpatterns = [
-    url('^$', GradeView.as_view({'get': 'list'}), ),
+    url('^$', GradeView.as_view({'get': 'list', 'post': 'create'}), ),
     url('^first/$', GradeView.as_view({'get': 'first'}), ),
     url('^query/$', GradeView.as_view({'get': 'query'}), ),
     url('^(?P<pk>\d+)$', GradeView.as_view({'get': 'retrieve'}), ),

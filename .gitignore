@@ -97,6 +97,7 @@ ENV/
 /site
 
 .mypy_cache/
+.pytest_cache/
 =======
 .DS_Store
 .idea
@@ -104,4 +105,5 @@ db.sqlite3
 logs
 locals.py
 xym.db
+xym_test.db
 static

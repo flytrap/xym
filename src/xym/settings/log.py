@@ -60,6 +60,10 @@ LOGGING = {
             'level': LOG_DB_LEVEL,
             'propagate': False,
         },
+        'test': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
         'xym': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
